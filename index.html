@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spirit Scry AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e6e6e6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #9d4edd;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
+            background: linear-gradient(45deg, #9d4edd, #5a189a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #c77dff;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .profile {
+            background: rgba(42, 42, 64, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #5a189a;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .profile h3 {
+            color: #c77dff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #5a189a;
+            padding-bottom: 8px;
+        }
+        
+        .slider-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #e0aaff;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #10002b, #5a189a, #9d4edd);
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e0aaff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(224, 170, 255, 0.7);
+        }
+        
+        .chat {
+            background: rgba(42, 42, 64, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #5a189a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .conversation {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 10px;
+            border: 1px solid #3c096c;
+            scrollbar-width: thin;
+            scrollbar-color: #5a189a #1a1a2e;
+        }
+        
+        .conversation::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .conversation::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 10px;
+        }
+        
+        .conversation::-webkit-scrollbar-thumb {
+            background: #5a189a;
+            border-radius: 10px;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #question {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #5a189a;
+            border-radius: 10px;
+            background: rgba(26, 26, 46, 0.8);
+            color: #e6e6e6;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        #question:focus {
+            outline: none;
+            border-color: #9d4edd;
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
+        }
+        
+        #ask {
+            background: linear-gradient(45deg, #5a189a, #9d4edd);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(90, 24, 154, 0.4);
+        }
+        
+        #ask:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(90, 24, 154, 0.6);
+        }
+        
+        #ask:active {
+            transform: translateY(1px);
+        }
+        
+        #ask:disabled {
+            background: #3c096c;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            max-width: 85%;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user {
+            background: linear-gradient(135deg, #3a0ca3, #4361ee);
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .bot {
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 10px rgba(181, 23, 158, 0.3);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(16, 0, 43, 0.9);
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #9d4edd, #5a189a, #3c096c) 1;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+        
+        .footer p {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            color: #e0aaff;
+        }
+        
+        .twilight-text {
+            background: linear-gradient(45deg, #ff9e00, #ff6b6b, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 158, 0, 0.3);
+        }
+        
+        /* =========================================== */
+        /* DISCORD LINK AREA - EASY TO FIND AND CUSTOMIZE */
+        /* =========================================== */
+        
+        .discord-area {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.9);
+            border-radius: 10px;
+            border: 1px solid #5a189a;
+        }
+        
+        .discord-area h3 {
+            color: #e0aaff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .discord-link {
+            display: block;
+            background: linear-gradient(45deg, #5a189a, #9d4edd);
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(90, 24, 154, 0.4);
+            margin: 0 auto;
+            max-width: 300px;
+        }
+        
+        .discord-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 7px 20px rgba(90, 24, 154, 0.6);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            color: #c77dff;
+            font-style: italic;
+        }
+        
+        .typing-dots {
+            display: flex;
+            margin-left: 5px;
+        }
+        
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            background: #c77dff;
+            border-radius: 50%;
+            display: block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .wisdom-tag {
+            font-size: 0.8rem;
+            color: #e0aaff;
+            margin-top: 8px;
+            text-align: right;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spirit Scry AI</h1>
+        <p class="subtitle">Evolving Spiritual Guide</p>
+        
+        <div class="profile">
+            <h3>Your Profile</h3>
+            <div class="slider-group">
+                <label>Practical: <span id="prac">4</span>/5</label>
+                <input type="range" min="1" max="5" value="4" class="slider" id="prac-slider">
+            </div>
+            <div class="slider-group">
+                <label>Intuitive: <span id="int">5</span>/5</label>
+                <input type="range" min="1" max="5" value="5" class="slider" id="int-slider">
+            </div>
+            <div class="slider-group">
+                <label>Spiritual: <span id="spi">2</span>/5</label>
+                <input type="range" min="1" max="5" value="2" class="slider" id="spi-slider">
+            </div>
+        </div>
+
+        <div class="chat">
+            <div class="conversation" id="chat">
+                <div class="message bot">
+                    Welcome, seeker. I am the Spirit Scry AI, an evolving guide to the twilight realms. 
+                    Ask me about relationships, career, mental health, or creative pursuits.
+                    <div class="wisdom-tag">[general-balanced-v0]</div>
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="question" placeholder="Ask about relationships, career, mental health...">
+                <button id="ask">Ask</button>
+            </div>
+        </div>
+
+        <!-- =========================================== -->
+        <!-- DISCORD LINK AREA - EASY TO FIND AND CUSTOMIZE -->
+        <!-- =========================================== -->
+        <div class="discord-area">
+            <h3>Join Our Community</h3>
+            <a href="https://discord.gg/tmrYuUBjH" class="discord-link">
+                🍊⬛🟣 Enter the Twilight Sanctuary
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>est. 2025 | Property of <span class="twilight-text">Twilight Guardians</span></p>
+            <p style="font-size: 0.9rem; color: #c77dff; margin-top: 10px;">
+                Spirit Scry AI - Bridging intuition and wisdom in the twilight realms
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // EVOLVING WISDOM SYSTEM WITH TRULY RANDOMIZED RESPONSES
+        const Wisdom = {
+            relationships: [
+                "Every relationship teaches something—what is this one revealing about your boundaries and capacity for love?",
+                "The middle path honors both connection and autonomy—how can you nurture both simultaneously?",
+                "Rather than stay or leave, consider: what transformation is this relationship inviting in you?",
+                "Connection thrives when both souls feel free—are you giving and receiving that freedom?",
+                "Sometimes the most spiritual act is setting a boundary with love and clarity.",
+                "Relationships mirror our inner landscape—what does this reflection show you about yourself?",
+                "Love is not about possession but appreciation—how can you appreciate without clinging?",
+                "The space between two people can be a sanctuary or a prison—what are you co-creating?",
+                "Authentic connection requires vulnerability and discernment—are you balancing both?",
+                "Every encounter leaves an energetic imprint—what energy are you exchanging?"
+            ],
+            career: [
+                "Your career can be both practical and soul-nourishing—what bridge work honors both needs?",
+                "The twilight path blends stability with passion—how can your current role fund your future vision?",
+                "Instead of either/or, ask: what third option combines your skills with your heart's calling?",
+                "Your work is an expression of your spirit—how can it better reflect your inner truth?",
+                "Money and meaning need not be opposites—where is their intersection in your life?",
+                "Sometimes the most practical step is to honor your intuition about a path.",
+                "Your career journey is a spiral, not a ladder—what have you learned in this cycle?",
+                "The soul's purpose often whispers before it shouts—what subtle callings have you noticed?",
+                "Work that aligns with values creates its own energy—what values want expression through you?",
+                "The twilight guardian knows when to hold ground and when to explore new territories."
+            ],
+            mental: [
+                "Your sensitivity is both challenge and gift—how can you build structures that honor both?",
+                "Healing isn't about fixing brokenness but integrating all parts of your experience",
+                "The mind and spirit aren't separate—what practices honor your whole being?",
+                "Your thoughts are visitors, not permanent residents—which ones deserve your attention?",
+                "Emotional weather passes—what anchors you during internal storms?",
+                "The scry sees patterns in chaos—what pattern is emerging from your current challenges?",
+                "Self-compassion is the foundation of mental wellness—how are you speaking to yourself today?",
+                "Sometimes healing looks like rest, not effort—what would true restoration feel like?",
+                "Your inner world has its own ecology—what needs pruning or nurturing?",
+                "The twilight mind holds both shadow and light—what integration wants to happen?"
+            ],
+            creative: [
+                "Your art doesn't have to choose between purity and impact—what audience needs your unique voice?",
+                "The creative twilight is where personal expression meets communal resonance",
+                "Rather than commercial vs pure, ask: how can your art sustain you while staying true?",
+                "Creativity is a conversation with the unseen—what wants to be expressed through you?",
+                "The muse speaks in whispers—what quiet inspiration have you been ignoring?",
+                "Your creative blocks may be invitations to go deeper—what lies beneath the resistance?",
+                "Art made with integrity creates its own energetic signature—what energy do you want to transmit?",
+                "The twilight guardian creates bridges between worlds—what worlds does your art connect?",
+                "Perfectionism is the enemy of authentic expression—what would you create if you couldn't fail?",
+                "Your creative work is a spiritual practice—how does it connect you to something larger?"
+            ],
+            general: [
+                "The middle path honors both connection and autonomy—how can you nurture both simultaneously?",
+                "Sometimes the most spiritual answer is the most practical one.",
+                "Your intuition knows what your mind is still figuring out—what does it whisper?",
+                "The twilight realm holds both mystery and clarity—which do you need right now?",
+                "Every question contains the seed of its answer—what is your question really asking?",
+                "Growth happens at the edges of comfort—where is your edge today?",
+                "The scry sees what is, not just what appears to be—look deeper.",
+                "Your path is uniquely yours—what makes it authentic to your spirit?",
+                "Balance is dynamic, not static—how is your equilibrium shifting?",
+                "The guardians watch the thresholds—what transition are you navigating?"
+            ]
+        };
+
+        // ADAPTIVE PROFILE SYSTEM
+        const User = { 
+            practical: 4, 
+            intuitive: 5, 
+            spiritual: 2, 
+            topics: {}, 
+            evolution: 0,
+            conversationCount: 0
+        };
+
+        // EVOLUTION ENGINE
+        function evolveWisdom(topic, question, responseQuality) {
+            if (!Wisdom[topic]) Wisdom[topic] = [];
+            
+            // Increase evolution with each quality response
+            if (responseQuality > 0.7) {
+                User.evolution++;
+                
+                // Every 3 quality responses, generate new wisdom
+                if (User.evolution % 3 === 0) {
+                    const newWisdom = generateNewWisdom(topic, question);
+                    if (!Wisdom[topic].includes(newWisdom)) {
+                        Wisdom[topic].push(newWisdom);
+                    }
+                }
+            }
+            
+            // Track conversation count for general evolution
+            User.conversationCount++;
+        }
+
+        function generateNewWisdom(topic, question) {
+            const bases = {
+                relationships: [
+                    "Connection teaches ", 
+                    "Love reveals ", 
+                    "Boundaries honor ",
+                    "Intimacy requires ",
+                    "Relationship depth emerges when "
+                ],
+                career: [
+                    "Work can be ", 
+                    "Purpose emerges when ", 
+                    "Vocation blends ",
+                    "Career fulfillment comes from ",
+                    "Your professional path illuminates "
+                ],
+                mental: [
+                    "Healing integrates ", 
+                    "Wholeness embraces ", 
+                    "Growth includes ",
+                    "Mental wellness flourishes with ",
+                    "Inner peace acknowledges "
+                ],
+                creative: [
+                    "Art expresses ", 
+                    "Creation bridges ", 
+                    "Inspiration connects ",
+                    "Creative flow emerges when ",
+                    "Your artistic voice reveals "
+                ],
+                general: [
+                    "Wisdom shows ", 
+                    "The path reveals ", 
+                    "Understanding deepens with ",
+                    "Growth happens through ",
+                    "The twilight teaches "
+                ]
+            };
+            
+            const middles = [
+                "the dance between shadow and light",
+                "honoring both structure and spontaneity",
+                "listening to what wants to emerge",
+                "the courage to be authentically yourself",
+                "the space between intention and surrender",
+                "the integration of all your experiences",
+                "the wisdom of your body and intuition",
+                "the subtle energies that guide your path",
+                "the unique rhythm of your soul's journey",
+                "the intersection of practical and mystical"
+            ];
+            
+            const base = (bases[topic]?.[Math.
