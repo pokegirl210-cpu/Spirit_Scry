@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spirit Scry ✨ Adaptive Spiritual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, 
+                #a8e6cf 0%,    /* Pastel neon green */
+                #dcedc1 25%,   /* Soft lime */
+                #ffffff 50%,   /* Pure white */
+                #b3e5fc 75%,   /* Pastel neon blue */
+                #81d4fa 100%   /* Soft azure */
+            );
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(163, 230, 207, 0.3);
+            border: 1px solid rgba(179, 229, 252, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            background: linear-gradient(45deg, #81d4fa, #a8e6cf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(129, 212, 250, 0.3);
+        }
+
+        .tagline {
+            color: #78909c;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .profile-panel {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #b3e5fc;
+        }
+
+        .profile-panel h3 {
+            color: #4db6ac;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #546e7a;
+            font-weight: 500;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0f2f1;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #81d4fa;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .chat-panel {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #a8e6cf;
+        }
+
+        .conversation {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border: 1px solid #e0f2f1;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #question-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #b3e5fc;
+            border-radius: 10px;
+            resize: vertical;
+            min-height: 60px;
+            font-size: 16px;
+        }
+
+        #ask-button {
+            background: linear-gradient(45deg, #81d4fa, #a8e6cf);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        #ask-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .user-message {
+            background: rgba(179, 229, 252, 0.3);
+            border-left: 4px solid #81d4fa;
+        }
+
+        .bot-message {
+            background: rgba(168, 230, 207, 0.3);
+            border-left: 4px solid #a8e6cf;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-panel {
+                order: 2;
+            }
+            
+            .chat-panel {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Spirit Scry ✨</h1>
+            <p class="tagline">Your Adaptive Spiritual Guide</p>
+        </div>
+
+        <div class="main-content">
+            <div class="profile-panel">
+                <h3>Your Spiritual Profile</h3>
+                <div class="slider-group">
+                    <label>Scientific: <span id="scientific-value">3</span>/5</label>
+                    <input type="range" min="1" max="5" value="3" class="slider" id="scientific-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Mystical: <span id="mystical-value">3</span>/5</label>
+                    <input type="range" min="1" max="5" value="3" class="slider" id="mystical-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Philosophical: <span id="philosophical-value">3</span>/5</label>
+                    <input type="range" min="1" max="5" value="3" class="slider" id="philosophical-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Depth: <span id="depth-value">2</span>/5</label>
+                    <input type="range" min="1" max="5" value="2" class="slider" id="depth-slider">
+                </div>
+            </div>
+
+            <div class="chat-panel">
+                <div class="chat-container">
+                    <div id="conversation" class="conversation">
+                        <div class="message bot-message">
+                            Welcome to Spirit Scry! I'm your adaptive spiritual guide. Ask me anything about life, spirit, or your journey. ✨
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <textarea id="question-input" placeholder="Ask your spiritual question..."></textarea>
+                        <button id="ask-button">Ask Spirit Scry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Spiritual responses database
+        const spiritualResponses = {
+            balanced: [
+                "The universe whispers that you already know the answer within your heart.",
+                "Consider this: every question contains the seed of its own answer.",
+                "In the stillness between thoughts, wisdom arises naturally.",
+                "Your path unfolds perfectly, even when you cannot see the entire journey.",
+                "Trust the process of becoming. All understanding arrives in its own time."
+            ],
+            scientific: [
+                "From a rational perspective, consider the observable patterns in your experience.",
+                "The data of your life suggests meaningful correlations worth exploring.",
+                "Apply the scientific method to your spiritual inquiry: observe, hypothesize, test.",
+                "Quantum physics shows us that observation affects reality - what are you observing?",
+                "Neuroscience reveals that contemplation rewires neural pathways toward wisdom."
+            ],
+            mystical: [
+                "The veil between worlds is thin today. Listen to the whispers of the unseen.",
+                "Your soul remembers ancient truths that your mind has yet to rediscover.",
+                "Synchronicities are the universe's way of winking at you. Pay attention.",
+                "In the sacred silence, all answers are revealed to the prepared heart.",
+                "The stars themselves sing the song your spirit yearns to remember."
+            ],
+            philosophical: [
+                "As the ancient philosophers asked: what is the nature of a well-lived life?",
+                "Consider the existential dimensions of your inquiry - being, meaning, purpose.",
+                "The examined life reveals truths that the unexamined cannot perceive.",
+                "Your question touches upon fundamental ontological concerns of human existence.",
+                "Wisdom begins in wonder, and you are clearly wondering deeply."
+            ]
+        };
+
+        // User profile
+        const userProfile = {
+            scientific: 3,
+            mystical: 3,
+            philosophical: 3,
+            depth: 2
+        };
+
+        // Update slider values in real-time
+        document.querySelectorAll('.slider').forEach(slider => {
+            slider.addEventListener('input', function() {
+                const valueId = this.id.replace('-slider', '-value');
+                document.getElementById(valueId).textContent = this.value;
+                userProfile[this.id.replace('-slider', '')] = parseInt(this.value);
+            });
+        });
+
+        // Ask question function
+        document.getElementById('ask-button').addEventListener('click', askQuestion);
+        document.getElementById('question-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                askQuestion();
+            }
+        });
+
+        function askQuestion() {
+            const input = document.getElementById('question-input');
+            const question = input.value.trim();
+            const button = document.getElementById('ask-button');
+            
+            if (!question) return;
+            
+            // Add user message to conversation
+            addMessage(question, 'user');
+            input.value = '';
+            button.disabled = true;
+            button.textContent = 'Scrying...';
+            
+            // Simulate AI processing time
+            setTimeout(() => {
+                const response = generateSpiritualResponse(question);
+                addMessage(response, 'bot');
+                
+                button.disabled = false;
+                button.textContent = 'Ask Spirit Scry';
+            }, 1500);
+        }
+
+        function generateSpiritualResponse(question) {
+            // Determine response style based on user profile
+            let style = 'balanced';
+            const maxInclination = Math.max(userProfile.scientific, userProfile.mystical, userProfile.philosophical);
+            
+            if (maxInclination >= 4) {
+                if (userProfile.scientific === maxInclination) style = 'scientific';
+                else if (userProfile.mystical === maxInclination) style = 'mystical';
+                else if (userProfile.philosophical === maxInclination) style = 'philosophical';
+            }
+            
+            // Select random response from the appropriate style
+            const responses = spiritualResponses[style];
+            const randomIndex = Math.floor(Math.random() * responses.length);
+            
+            return responses[randomIndex];
+        }
+
+        function addMessage(text, sender) {
+            const conversation = document.getElementById('conversation');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = text;
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        // Initialize profile displays
+        document.getElementById('scientific-value').textContent = userProfile.scientific;
+        document.getElementById('mystical-value').textContent = userProfile.mystical;
+        document.getElementById('philosophical-value').textContent = userProfile.philosophical;
+        document.getElementById('depth-value').textContent = userProfile.depth;
+    </script>
+</body>
+</html>
